@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<String> _navLabels = [
     'HOME',
     'ABOUT',
-    'PROJECTS',
     'EXPERIENCE',
+    'PROJECTS',
     'CONTACT'
   ];
 
@@ -45,46 +45,44 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  /// Returns the absolute scroll offset of a section using its GlobalKey.
+  double? _getKeyOffset(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    // localToGlobal gives position on screen; add current scroll offset
+    // and subtract the nav bar height (64) to get the content offset.
+    final pos = box.localToGlobal(Offset.zero);
+    return _scrollCtrl.offset + pos.dy - 64;
+  }
+
   void _onScroll() {
-    final screenH = MediaQuery.of(context).size.height;
     final offset = _scrollCtrl.offset;
-
-    // Approximate section heights for nav highlighting
-    // (sections are estimated — fine-tune per actual heights)
     int active = 0;
-    if (offset < screenH * 0.8) {
-      active = 0;
-    } else if (offset < screenH * 1.8) {
-      active = 1;
-    } else if (offset < screenH * 2.8) {
-      active = 2;
-    } else if (offset < screenH * 3.6) {
-      active = 3;
-    } else {
-      active = 4;
+    // Walk sections from last to first; first one whose top is <= current
+    // offset (with a small look-ahead buffer) wins.
+    for (int i = _sectionKeys.length - 1; i >= 0; i--) {
+      final top = _getKeyOffset(_sectionKeys[i]);
+      if (top != null && offset >= top - 80) {
+        active = i;
+        break;
+      }
     }
-
     if (active != _activeSection) {
       setState(() => _activeSection = active);
     }
   }
 
   void _scrollToSection(int index) {
-    // Approximate pixel offsets per section
-    final screenH = MediaQuery.of(context).size.height;
-    final offsets = [
-      0.0,
-      screenH * 0.95,
-      screenH * 1.9,
-      screenH * 2.9,
-      screenH * 3.7,
-    ];
-
-    _scrollCtrl.animateTo(
-      offsets[index],
-      duration: const Duration(milliseconds: 800),
-      curve: Curves.easeInOutCubic,
-    );
+    final target = _getKeyOffset(_sectionKeys[index]);
+    if (target != null) {
+      _scrollCtrl.animateTo(
+        target.clamp(0.0, _scrollCtrl.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOutCubic,
+      );
+    }
   }
 
   @override
@@ -104,18 +102,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 // ── Hero ────────────────────────────────────────────────────
                 HeroSection(
                   key: _sectionKeys[0],
-                  onViewProjects: () => _scrollToSection(2),
+                  onViewProjects: () => _scrollToSection(3),
                   onContact: () => _scrollToSection(4),
                 ),
 
                 // ── About ───────────────────────────────────────────────────
                 AboutSection(key: _sectionKeys[1]),
 
-                // ── Projects ────────────────────────────────────────────────
-                ProjectsSection(key: _sectionKeys[2]),
-
                 // ── Experience ──────────────────────────────────────────────
-                ExperienceSection(key: _sectionKeys[3]),
+                ExperienceSection(key: _sectionKeys[2]),
+
+                // ── Projects ────────────────────────────────────────────────
+                ProjectsSection(key: _sectionKeys[3]),
 
                 // ── Contact ─────────────────────────────────────────────────
                 ContactSection(key: _sectionKeys[4]),

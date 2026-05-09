@@ -286,14 +286,14 @@ class _SocialPanel extends StatelessWidget {
         _SocialLink(
           icon: Icons.code,
           label: 'GitHub',
-          value: 'github.com/yourusername',
+          value: 'github.com/Kuwar-Vishnudatt',
           color: AppTheme.neonPurple,
         ),
         const SizedBox(height: 16),
         _SocialLink(
           icon: Icons.business_center_outlined,
           label: 'LinkedIn',
-          value: 'linkedin.com/in/yourusername',
+          value: 'linkedin.com/in/kuwar-vishnudatt-/',
           color: AppTheme.neonGreen,
         ),
         const SizedBox(height: 40),

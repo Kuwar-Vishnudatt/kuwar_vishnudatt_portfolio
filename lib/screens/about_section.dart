@@ -84,30 +84,9 @@ class _BioCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Avatar placeholder
+          // Name + subtitle header (no avatar)
           Row(
             children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppTheme.neonCyan.withOpacity(0.5),
-                    width: 1.5,
-                  ),
-                  boxShadow: AppTheme.cyanGlow(intensity: 0.5),
-                  gradient: const LinearGradient(
-                    colors: [AppTheme.bgCard, AppTheme.bgGlass],
-                  ),
-                ),
-                child: Icon(
-                  Icons.person,
-                  color: AppTheme.neonCyan.withOpacity(0.5),
-                  size: 36,
-                ),
-              ),
-              const SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

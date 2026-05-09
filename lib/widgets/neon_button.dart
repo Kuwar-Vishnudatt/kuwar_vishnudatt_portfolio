@@ -59,7 +59,8 @@ class _NeonButtonState extends State<NeonButton>
           animation: _glowAnim,
           builder: (_, __) {
             final intensity =
-                _hovered ? _glowAnim.value * 1.5 : _glowAnim.value;
+                (_hovered ? _glowAnim.value * 1.5 : _glowAnim.value)
+                    .clamp(0.0, 1.0);
             return AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               transform: Matrix4.identity()..scale(_hovered ? 1.06 : 1.0),
